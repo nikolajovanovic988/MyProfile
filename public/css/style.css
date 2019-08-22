@@ -1,0 +1,9 @@
+.logo{
+    height: 25px;
+}
+.img-center-25 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+ }
