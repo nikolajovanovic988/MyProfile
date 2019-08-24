@@ -20,7 +20,7 @@ class CreateProfilePhonebooksTable extends Migration
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
             $table->integer('number')->nullable();
-            $table->string('mail')->nullable();
+            $table->string('email')->nullable();
 
             $table->timestamps();
             $table->index('user_id');

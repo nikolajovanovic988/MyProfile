@@ -46,6 +46,7 @@ class ProfileProjectsController extends Controller
         ]);
 
         if (request('video')) {
+
             $videoPath = request('video')->store('videos', 'public');
             $videoArray = ['video' => $videoPath];
         };

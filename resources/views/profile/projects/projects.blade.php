@@ -29,6 +29,7 @@
                         <p>Field : {{$projects->field}}</p>
                         <p>techonologie : {{$projects->techonologie}}</p>
                         <p>link : {{$projects->link}}</p>
+
                         <video width="300" controls>
                             <source src="/storage/{{ $projects->video }}" type="video/mp4">
                             <source src="/storage/{{ $projects->video }}" type="video/ogg">
