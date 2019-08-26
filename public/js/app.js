@@ -1494,7 +1494,7 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/axios/node_modules/is-buffer/index.js");
 
 /*global toString:true*/
 
@@ -1829,6 +1829,28 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PhonebookComponent.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PhonebookComponent.vue?vue&type=script&lang=js& ***!
@@ -2013,6 +2035,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['userId'],
   mounted: function mounted() {
     console.log('Component mounted.');
   },
@@ -2020,39 +2043,44 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       newName: '',
-      newPhone: '',
-      newMall: '',
-      idForPhonebook: 3,
-      phonebooks: [{
-        'id': 1,
-        'name': 'nikola111111 111',
-        'phone': '061111111',
-        'mail': 'some@mail.com'
-      }, {
-        'id': 2,
-        'name': 'nikola2222222 2222',
-        'phone': '062222222',
-        'mail': 'some2@mail.com'
-      }, {
-        'id': 3,
-        'name': 'nikola33333 3333',
-        'phone': '063333333',
-        'mail': 'some3@mail.com'
-      }]
+      newNumber: '',
+      newEmail: '',
+      newPhonebook: {
+        name: '',
+        number: '',
+        email: ''
+      },
+      phonebooks: this.getPhonebook()
     };
   },
   computed: {},
   methods: {
     addPhonebook: function addPhonebook() {
-      this.phonebooks.push({
-        id: this.idForPhonebook,
-        name: this.newName,
-        phone: this.newPhone,
-        mail: this.newMall
+      var _this = this;
+
+      //this.newPhonebook.push({
+      //    name: this.newName,
+      //    phone: this.newPhone,
+      //    mail: this.newMall,
+      //})
+      axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook).then(function (response) {
+        _this.phonebooks = _this.getPhonebook();
       });
     },
     removePhonebook: function removePhonebook(phonebook, index) {
+      var _this2 = this;
+
       this.phonebooks.splice(index, 1);
+      axios["delete"]('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id).then(function (response) {
+        _this2.phonebooks = _this2.getPhonebook();
+      });
+    },
+    getPhonebook: function getPhonebook() {
+      var _this3 = this;
+
+      axios.get('/profile/' + this.userId + '/phonebook/get').then(function (response) {
+        _this3.phonebooks = response.data;
+      });
     }
   }
 });
@@ -2137,16 +2165,16 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      axios.post('/profile/' + this.userId + '/todo/add/' + this.newTodo).then(function (response) {
+      axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo).then(function (response) {
         _this.todos = _this.getTodo();
       });
       this.newTodo = '';
     },
-    removeTodo: function removeTodo(todo, index) {
+    deleteTodo: function deleteTodo(todo, index) {
       var _this2 = this;
 
       this.todos.splice(index, 1);
-      axios.post('/profile/' + this.userId + '/todo/remove/' + todo.id).then(function (response) {
+      axios["delete"]('/profile/' + this.userId + '/todo/delete/' + todo.id).then(function (response) {
         _this2.todos = _this2.getTodo();
       });
     },
@@ -6755,28 +6783,6 @@ function toComment(sourceMap) {
 	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
 
 	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/is-buffer/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/is-buffer/index.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-module.exports = function isBuffer (obj) {
-  return obj != null && obj.constructor != null &&
-    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
 
 
@@ -17413,7 +17419,7 @@ return jQuery;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.15';
+  var VERSION = '4.17.14';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -38250,19 +38256,23 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.newName,
-                                expression: "newName"
+                                value: _vm.newPhonebook.name,
+                                expression: "newPhonebook.name"
                               }
                             ],
                             staticClass: "form-control w-50",
                             attrs: { id: "name", type: "text", autofocus: "" },
-                            domProps: { value: _vm.newName },
+                            domProps: { value: _vm.newPhonebook.name },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.newName = $event.target.value
+                                _vm.$set(
+                                  _vm.newPhonebook,
+                                  "name",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
@@ -38284,8 +38294,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.newPhone,
-                                expression: "newPhone"
+                                value: _vm.newPhonebook.number,
+                                expression: "newPhonebook.number"
                               }
                             ],
                             staticClass: "form-control w-50",
@@ -38294,13 +38304,17 @@ var render = function() {
                               type: "text",
                               autofocus: ""
                             },
-                            domProps: { value: _vm.newPhone },
+                            domProps: { value: _vm.newPhonebook.number },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.newPhone = $event.target.value
+                                _vm.$set(
+                                  _vm.newPhonebook,
+                                  "number",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
@@ -38312,9 +38326,9 @@ var render = function() {
                             {
                               staticClass:
                                 "col-md-2 col-form-label text-md-right",
-                              attrs: { for: "mail" }
+                              attrs: { for: "email" }
                             },
-                            [_vm._v("Mail:")]
+                            [_vm._v("email:")]
                           ),
                           _vm._v(" "),
                           _c("input", {
@@ -38322,19 +38336,23 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.newMall,
-                                expression: "newMall"
+                                value: _vm.newPhonebook.email,
+                                expression: "newPhonebook.email"
                               }
                             ],
                             staticClass: "form-control w-50",
-                            attrs: { id: "mail", type: "text", autofocus: "" },
-                            domProps: { value: _vm.newMall },
+                            attrs: { id: "email", type: "text", autofocus: "" },
+                            domProps: { value: _vm.newPhonebook.email },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.newMall = $event.target.value
+                                _vm.$set(
+                                  _vm.newPhonebook,
+                                  "email",
+                                  $event.target.value
+                                )
                               }
                             }
                           })
@@ -38436,7 +38454,7 @@ var render = function() {
                                     "ml-3 col-form-label text-md-right",
                                   attrs: { for: "number" }
                                 },
-                                [_vm._v(_vm._s(phonebook.phone))]
+                                [_vm._v(_vm._s(phonebook.number))]
                               )
                             ]),
                             _vm._v(" "),
@@ -38446,9 +38464,9 @@ var render = function() {
                                 {
                                   staticClass:
                                     "ml-3 col-form-label text-md-right",
-                                  attrs: { for: "mail" }
+                                  attrs: { for: "email" }
                                 },
-                                [_vm._v(_vm._s(phonebook.mail))]
+                                [_vm._v(_vm._s(phonebook.email))]
                               )
                             ])
                           ]),
@@ -38554,8 +38572,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.newPhone,
-                                    expression: "newPhone"
+                                    value: _vm.newNumber,
+                                    expression: "newNumber"
                                   }
                                 ],
                                 staticClass: "form-control w-50",
@@ -38564,13 +38582,13 @@ var render = function() {
                                   type: "text",
                                   autofocus: ""
                                 },
-                                domProps: { value: _vm.newPhone },
+                                domProps: { value: _vm.newNumber },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.newPhone = $event.target.value
+                                    _vm.newNumber = $event.target.value
                                   }
                                 }
                               })
@@ -38582,9 +38600,9 @@ var render = function() {
                                 {
                                   staticClass:
                                     "col-md-2 col-form-label text-md-right",
-                                  attrs: { for: "mail" }
+                                  attrs: { for: "email" }
                                 },
-                                [_vm._v("Mail:")]
+                                [_vm._v("email:")]
                               ),
                               _vm._v(" "),
                               _c("input", {
@@ -38592,23 +38610,23 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.newMall,
-                                    expression: "newMall"
+                                    value: _vm.newEmail,
+                                    expression: "newEmail"
                                   }
                                 ],
                                 staticClass: "form-control w-50",
                                 attrs: {
-                                  id: "mail",
+                                  id: "email",
                                   type: "text",
                                   autofocus: ""
                                 },
-                                domProps: { value: _vm.newMall },
+                                domProps: { value: _vm.newEmail },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.newMall = $event.target.value
+                                    _vm.newEmail = $event.target.value
                                   }
                                 }
                               })
@@ -38876,7 +38894,7 @@ var render = function() {
                   staticClass: "pointer",
                   on: {
                     click: function($event) {
-                      return _vm.removeTodo(todo, index)
+                      return _vm.deleteTodo(todo, index)
                     }
                   }
                 },

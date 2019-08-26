@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <phonebook-component></phonebook-component>
+        <phonebook-component user-id='{{ $user->id }}'></phonebook-component>
 
     </div>
     @endsection

@@ -13,6 +13,7 @@
                 </div>
 
                 <div class="col-12">
+
                     <img src="{{ Auth::user()->profile->profileImage() }}" class="img-center-25" alt="">
                 </div>
 

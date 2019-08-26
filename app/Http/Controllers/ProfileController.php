@@ -40,14 +40,18 @@ class ProfileController extends Controller
     {
         $data = request()->validate([
             'description' => 'required',
-            'image' => 'image',
+            'image' => 'file|image|max:5000',
         ]);
-        
-        if (request('image')) {
+
+        if (request()->has('image')) {
+
+            //dd(request('image'));
+
             $imagePath = request('image')->store('profile', 'public');
-            $image = Image::make(\public_path("storage/{$imagePath}"));
-            $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
+
+            $image = Image::make(public_path("storage/{$imagePath}"));
             $image->save();
+
             $imageArray = ['image' => $imagePath];
         }
 

@@ -13,7 +13,7 @@
                     <div class="pl-1" :class="{ completed : todo.completed }">{{todo.task}}</div>
                 </div>
 
-                <div class="pointer" @click="removeTodo(todo,index)">
+                <div class="pointer" @click="deleteTodo(todo,index)">
                     &times;
                 </div>
 
@@ -70,7 +70,7 @@
                 if (this.newTodo.trim().length == 0) {
                     return
                 }
-                axios.post('/profile/' + this.userId + '/todo/add/' + this.newTodo)
+                axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo)
                     .then(response => {
                         this.todos = this.getTodo();
                     }
@@ -80,10 +80,10 @@
 
             },
 
-            removeTodo(todo, index){
+            deleteTodo(todo, index){
                 this.todos.splice(index, 1)
 
-                axios.post('/profile/' + this.userId + '/todo/remove/' + todo.id)
+                axios.delete('/profile/' + this.userId + '/todo/delete/' + todo.id)
                     .then(response => {
                         this.todos = this.getTodo();
                     }

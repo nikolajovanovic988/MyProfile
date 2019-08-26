@@ -29,7 +29,7 @@ class ProfileTodoController extends Controller
         return view('profile.todo.todo', compact('user'));
     }
 
-    public function add(User $user, $todo)
+    public function store(User $user, $todo)
     {
         $data = [
             'task' => $todo,
@@ -39,7 +39,7 @@ class ProfileTodoController extends Controller
         $user->profiletodos()->create($data);
     }
 
-    public function remove(User $user, ProfileTodo $todo)
+    public function delete(User $user, ProfileTodo $todo)
     {
         $user->profiletodos()->find($todo->id)->delete();
     }

@@ -18,7 +18,6 @@ class CreateProfilePhonebooksTable extends Migration
             $table->unsignedBigInteger('user_id');
 
             $table->string('name')->nullable();
-            $table->string('surname')->nullable();
             $table->integer('number')->nullable();
             $table->string('email')->nullable();
 

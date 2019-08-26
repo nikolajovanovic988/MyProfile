@@ -6,12 +6,12 @@
             <div class="d-flex justify-content-between align-items-center pb-3">
                 <img src="/img/mglass/magnifying-glass.jpg" class="logo pr-2" alt="">
                 <input type="text" name="todo" class="w-100" placeholder="Search">
-                
+
                 <!-- Button trigger modal -->
                 <button type="button" class="btn-success ml-3" data-toggle="modal" data-target="#set">
                   Add
                 </button>
-                
+
                 <!-- Modal -->
                 <div class="modal fade" id="set" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -29,25 +29,25 @@
                                     <input id="name"
                                     type="text"
                                     class="form-control w-50"
-                                    v-model="newName"
+                                    v-model="newPhonebook.name"
                                     autofocus>
                                 </div>
-                                
+
                                 <div class="row form-group">
                                     <label for="number" class="col-md-2 col-form-label text-md-right">Number:</label>
                                     <input id="number"
                                     type="text"
                                     class="form-control w-50"
-                                    v-model="newPhone"
+                                    v-model="newPhonebook.number"
                                     autofocus>
                                 </div>
 
                                 <div class="row form-group">
-                                    <label for="mail" class="col-md-2 col-form-label text-md-right">Mail:</label>
-                                    <input id="mail"
+                                    <label for="email" class="col-md-2 col-form-label text-md-right">email:</label>
+                                    <input id="email"
                                     type="text"
                                     class="form-control w-50"
-                                    v-model="newMall"
+                                    v-model="newPhonebook.email"
                                     autofocus>
                                 </div>
 
@@ -70,8 +70,8 @@
 
                 <div class="d-flex w-50 justify-content-between">
                     <div class="m-1">
-                        
-                        <label class="pointer" for="show" data-toggle="modal" data-target="#show">show</label> 
+
+                        <label class="pointer" for="show" data-toggle="modal" data-target="#show">show</label>
                         <div class="modal fade" id="show" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -86,13 +86,13 @@
                                         <div class="row form-group">
                                             <label for="name" class="ml-3 col-form-label text-md-right">{{phonebook.name}}</label>
                                         </div>
-                                
+
                                         <div class="row form-group">
-                                            <label for="number" class="ml-3 col-form-label text-md-right">{{phonebook.phone}}</label>
+                                            <label for="number" class="ml-3 col-form-label text-md-right">{{phonebook.number}}</label>
                                         </div>
 
                                         <div class="row form-group">
-                                            <label for="mail" class="ml-3 col-form-label text-md-right">{{phonebook.mail}}</label>
+                                            <label for="email" class="ml-3 col-form-label text-md-right">{{phonebook.email}}</label>
                                         </div>
 
                                     </div>
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="m-1">
-                        <label class="pointer" for="edit" data-toggle="modal" data-target="#edit">edit</label> 
+                        <label class="pointer" for="edit" data-toggle="modal" data-target="#edit">edit</label>
                         <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -126,22 +126,22 @@
                                             placeholder = "some"
                                             autofocus>
                                         </div>
-                                
+
                                         <div class="row form-group">
                                             <label for="number" class="col-md-2 col-form-label text-md-right">Number:</label>
                                             <input id="number"
                                             type="text"
                                             class="form-control w-50"
-                                            v-model="newPhone"
+                                            v-model="newNumber"
                                             autofocus>
                                         </div>
 
                                         <div class="row form-group">
-                                            <label for="mail" class="col-md-2 col-form-label text-md-right">Mail:</label>
-                                            <input id="mail"
+                                            <label for="email" class="col-md-2 col-form-label text-md-right">email:</label>
+                                            <input id="email"
                                             type="text"
                                             class="form-control w-50"
-                                            v-model="newMall"
+                                            v-model="newEmail"
                                             autofocus>
                                         </div>
 
@@ -175,6 +175,8 @@
 <script>
     export default {
 
+        props: ['userId'],
+
         mounted() {
             console.log('Component mounted.')
         },
@@ -182,30 +184,19 @@
         name:'phonebook-list',
         data(){
             return{
-                newName: '',
-                newPhone: '',
-                newMall: '',
-                idForPhonebook: 3,
-                phonebooks: [
-                    {
-                        'id' : 1,
-                        'name' : 'nikola111111 111',
-                        'phone' : '061111111',
-                        'mail' : 'some@mail.com',
-                    },
-                    {
-                        'id' : 2,
-                        'name' : 'nikola2222222 2222',
-                        'phone' : '062222222',
-                        'mail' : 'some2@mail.com',
-                    },
-                    {
-                        'id' : 3,
-                        'name' : 'nikola33333 3333',
-                        'phone' : '063333333',
-                        'mail' : 'some3@mail.com',
-                    },
-                ]
+
+                newName : '',
+                newNumber : '',
+                newEmail : '',
+
+                newPhonebook: {
+                    name : '',
+                    number : '',
+                    email : ''
+                },
+
+                phonebooks: this.getPhonebook(),
+
             }
         },
 
@@ -216,19 +207,45 @@
         methods:{
 
             addPhonebook(){
-                
-                this.phonebooks.push({
-                    id: this.idForPhonebook,
-                    name: this.newName,
-                    phone: this.newPhone,
-                    mail: this.newMall,
-                })
+
+                //this.newPhonebook.push({
+                //    name: this.newName,
+                //    phone: this.newPhone,
+                //    mail: this.newMall,
+//})
+
+                axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook)
+                    .then(response => {
+                        this.phonebooks = this. getPhonebook();
+                    }
+                )
 
             },
 
             removePhonebook(phonebook,index){
+
                 this.phonebooks.splice(index,1)
-            }
+
+                axios.delete('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id)
+                    .then(response => {
+
+                        this.phonebooks = this. getPhonebook();
+
+                    }
+                )
+
+            },
+
+            getPhonebook() {
+
+                axios.get('/profile/' + this.userId + '/phonebook/get')
+                    .then(response => {
+
+                        this.phonebooks = response.data;
+
+                    }
+                )
+            },
 
         }
     }

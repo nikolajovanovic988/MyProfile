@@ -23,14 +23,17 @@ Route::get('/', 'HomeController@index')->name('home');
 
 // TODO
 Route::get('/profile/{user}/todo', 'ProfileTodoController@index')->name('todo.show');
-Route::post('/profile/{user}/todo/add/{todo}', 'ProfileTodoController@add');
-Route::post('/profile/{user}/todo/remove/{todo}', 'ProfileTodoController@remove');
+Route::post('/profile/{user}/todo/store/{todo}', 'ProfileTodoController@store')->name('todo.store');
+Route::delete('/profile/{user}/todo/delete/{todo}', 'ProfileTodoController@delete');
 Route::post('/profile/{user}/todo/get', 'ProfileTodoController@get');
 Route::post('/profile/{user}/todo/edit/{todo}/{value}', 'ProfileTodoController@edit');
 
 
 // PHONEBOOK
-Route::get('/profile/{user}/phonebook', 'ProfilePhonebookController@index')->name('contacts.show');
+Route::get('/profile/{user}/phonebook', 'ProfilePhonebookController@index')->name('phonebook.show');
+Route::post('/profile/{user}/phonebook/store', 'ProfilePhonebookController@store')->name('phonebook.store');
+Route::get('/profile/{user}/phonebook/get', 'ProfilePhonebookController@get');
+Route::delete('/profile/{user}/phonebook/delete/{phonebook}', 'ProfilePhonebookController@delete');
 
 // PROFILE
 Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');

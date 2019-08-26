@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ProfilePhonebook;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,28 @@ class ProfilePhonebookController extends Controller
     {
         $user = auth()->user();
         return view('profile.phonebook.phonebook', compact('user'));
+    }
+
+    public function store(User $user, Request $request)
+    {
+        $data = [
+            'name' => $request->name,
+            'number' => $request->number,
+            'email' => $request->email
+        ];
+
+        $user->profilephonebook()->create($data);
+
+    }
+
+    public function get(User $user)
+    {
+        return $user->profilephonebook;
+    }
+
+    public function delete(User $user, ProfilePhonebook $phonebook)
+    {
+        $user->profilephonebook()->find($phonebook->id)->delete();
     }
 
 
