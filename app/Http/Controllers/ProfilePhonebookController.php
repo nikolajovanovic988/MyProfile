@@ -43,12 +43,23 @@ class ProfilePhonebookController extends Controller
 
     public function get(User $user)
     {
-        return $user->profilephonebook;
+        return $user->profilephonebook()->orderBy('name', 'DESC')->get();
     }
 
     public function delete(User $user, ProfilePhonebook $phonebook)
     {
         $user->profilephonebook()->find($phonebook->id)->delete();
+    }
+
+    public function update(User $user, Request $request)
+    {
+        $data = [
+            'name' => $request->name,
+            'number' => $request->number,
+            'email' => $request->email
+        ];
+
+        $user->profilephonebook()->find($request->id)->update($data);
     }
 
 

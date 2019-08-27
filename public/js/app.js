@@ -2032,55 +2032,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['userId'],
   mounted: function mounted() {
-    console.log('Component mounted.');
+    this.getPhonebook();
   },
   name: 'phonebook-list',
   data: function data() {
     return {
-      newName: '',
-      newNumber: '',
-      newEmail: '',
+      showPhonebook: {},
       newPhonebook: {
         name: '',
         number: '',
         email: ''
       },
-      phonebooks: this.getPhonebook()
+      phonebooks: {}
     };
   },
   computed: {},
   methods: {
     addPhonebook: function addPhonebook() {
-      var _this = this;
-
-      //this.newPhonebook.push({
-      //    name: this.newName,
-      //    phone: this.newPhone,
-      //    mail: this.newMall,
-      //})
-      axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook).then(function (response) {
-        _this.phonebooks = _this.getPhonebook();
-      });
+      axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook);
+      this.getPhonebook();
+      /*
+      this.newPhonebook.name = '';
+      this.newPhonebook.number = '';
+      this.newPhonebook.email = '';
+      */
     },
     removePhonebook: function removePhonebook(phonebook, index) {
-      var _this2 = this;
-
       this.phonebooks.splice(index, 1);
-      axios["delete"]('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id).then(function (response) {
-        _this2.phonebooks = _this2.getPhonebook();
-      });
+      axios["delete"]('/profile/' + this.userId + '/phonebook/' + phonebook.id);
+      this.getPhonebook();
     },
     getPhonebook: function getPhonebook() {
-      var _this3 = this;
+      var _this = this;
 
       axios.get('/profile/' + this.userId + '/phonebook/get').then(function (response) {
-        _this3.phonebooks = response.data;
+        _this.phonebooks = response.data;
       });
+    },
+    setPhonebookData: function setPhonebookData(index) {
+      this.showPhonebook = this.phonebooks[index];
+    },
+    updatePhonebook: function updatePhonebook() {
+      axios.patch('/profile/' + this.userId + '/phonebook/', this.showPhonebook);
+      this.getPhonebook();
     }
   }
 });
@@ -2138,13 +2135,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['userId'],
   mounted: function mounted() {
-    console.log('Component mounted.');
+    this.getTodo();
   },
   name: 'todo-list',
   data: function data() {
     return {
       newTodo: '',
-      todos: this.getTodo()
+      todos: {}
     };
   },
   computed: {
@@ -2159,36 +2156,30 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addTodo: function addTodo() {
-      var _this = this;
-
       if (this.newTodo.trim().length == 0) {
         return;
       }
 
-      axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo).then(function (response) {
-        _this.todos = _this.getTodo();
-      });
+      axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo);
+      this.getTodo();
       this.newTodo = '';
     },
     deleteTodo: function deleteTodo(todo, index) {
-      var _this2 = this;
-
       this.todos.splice(index, 1);
-      axios["delete"]('/profile/' + this.userId + '/todo/delete/' + todo.id).then(function (response) {
-        _this2.todos = _this2.getTodo();
-      });
+      axios["delete"]('/profile/' + this.userId + '/todo/delete/' + todo.id);
+      this.getTodo();
     },
     getTodo: function getTodo() {
-      var _this3 = this;
+      var _this = this;
 
       axios.post('/profile/' + this.userId + '/todo/get').then(function (response) {
-        _this3.todos = response.data;
+        _this.todos = response.data;
 
-        for (var index = 0; index < _this3.todos.length; index++) {
-          if (_this3.todos[index].completed == 0) {
-            _this3.todos[index].completed = false; //alert(this.todos[index].completed)
-          } else if (_this3.todos[index].completed == 1) {
-            _this3.todos[index].completed = true; //alert(this.todos[index].completed)
+        for (var index = 0; index < _this.todos.length; index++) {
+          if (_this.todos[index].completed == 0) {
+            _this.todos[index].completed = false; //alert(this.todos[index].completed)
+          } else if (_this.todos[index].completed == 1) {
+            _this.todos[index].completed = true; //alert(this.todos[index].completed)
           }
         }
       });
@@ -38402,9 +38393,14 @@ var render = function() {
                   {
                     staticClass: "pointer",
                     attrs: {
-                      for: "show",
+                      for: "edit",
                       "data-toggle": "modal",
                       "data-target": "#show"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setPhonebookData(index)
+                      }
                     }
                   },
                   [_vm._v("show")]
@@ -38431,43 +38427,36 @@ var render = function() {
                       },
                       [
                         _c("div", { staticClass: "modal-content" }, [
-                          _vm._m(1, true),
+                          _c("div", { staticClass: "modal-header" }, [
+                            _c("h5", { staticClass: "modal-title" }, [
+                              _vm._v(
+                                _vm._s(_vm.showPhonebook.name) + "'s details"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm._m(1, true)
+                          ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-body" }, [
-                            _c("div", { staticClass: "row form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass:
-                                    "ml-3 col-form-label text-md-right",
-                                  attrs: { for: "name" }
-                                },
-                                [_vm._v(_vm._s(phonebook.name))]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "row form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass:
-                                    "ml-3 col-form-label text-md-right",
-                                  attrs: { for: "number" }
-                                },
-                                [_vm._v(_vm._s(phonebook.number))]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "row form-group" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass:
-                                    "ml-3 col-form-label text-md-right",
-                                  attrs: { for: "email" }
-                                },
-                                [_vm._v(_vm._s(phonebook.email))]
-                              )
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("Name: "),
+                              _c("b", [_vm._v(_vm._s(_vm.showPhonebook.name))])
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("Number: "),
+                              _c("b", [
+                                _vm._v(_vm._s(_vm.showPhonebook.number))
+                              ])
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("Email: "),
+                              _c("b", [_vm._v(_vm._s(_vm.showPhonebook.email))])
                             ])
                           ]),
                           _vm._v(" "),
@@ -38488,6 +38477,11 @@ var render = function() {
                       for: "edit",
                       "data-toggle": "modal",
                       "data-target": "#edit"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.setPhonebookData(index)
+                      }
                     }
                   },
                   [_vm._v("edit")]
@@ -38514,7 +38508,17 @@ var render = function() {
                       },
                       [
                         _c("div", { staticClass: "modal-content" }, [
-                          _vm._m(3, true),
+                          _c("div", { staticClass: "modal-header" }, [
+                            _c("h5", { staticClass: "modal-title" }, [
+                              _vm._v(
+                                "Edit " +
+                                  _vm._s(_vm.showPhonebook.name) +
+                                  "'s details"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm._m(3, true)
+                          ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-body" }, [
                             _c("div", { staticClass: "row form-group" }, [
@@ -38533,24 +38537,27 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.newName,
-                                    expression: "newName"
+                                    value: _vm.showPhonebook.name,
+                                    expression: "showPhonebook.name"
                                   }
                                 ],
                                 staticClass: "form-control w-50",
                                 attrs: {
                                   id: "name",
                                   type: "text",
-                                  placeholder: "some",
                                   autofocus: ""
                                 },
-                                domProps: { value: _vm.newName },
+                                domProps: { value: _vm.showPhonebook.name },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.newName = $event.target.value
+                                    _vm.$set(
+                                      _vm.showPhonebook,
+                                      "name",
+                                      $event.target.value
+                                    )
                                   }
                                 }
                               })
@@ -38572,8 +38579,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.newNumber,
-                                    expression: "newNumber"
+                                    value: _vm.showPhonebook.number,
+                                    expression: "showPhonebook.number"
                                   }
                                 ],
                                 staticClass: "form-control w-50",
@@ -38582,13 +38589,17 @@ var render = function() {
                                   type: "text",
                                   autofocus: ""
                                 },
-                                domProps: { value: _vm.newNumber },
+                                domProps: { value: _vm.showPhonebook.number },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.newNumber = $event.target.value
+                                    _vm.$set(
+                                      _vm.showPhonebook,
+                                      "number",
+                                      $event.target.value
+                                    )
                                   }
                                 }
                               })
@@ -38610,8 +38621,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.newEmail,
-                                    expression: "newEmail"
+                                    value: _vm.showPhonebook.email,
+                                    expression: "showPhonebook.email"
                                   }
                                 ],
                                 staticClass: "form-control w-50",
@@ -38620,13 +38631,17 @@ var render = function() {
                                   type: "text",
                                   autofocus: ""
                                 },
-                                domProps: { value: _vm.newEmail },
+                                domProps: { value: _vm.showPhonebook.email },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.newEmail = $event.target.value
+                                    _vm.$set(
+                                      _vm.showPhonebook,
+                                      "email",
+                                      $event.target.value
+                                    )
                                   }
                                 }
                               })
@@ -38654,9 +38669,13 @@ var render = function() {
                                   type: "button",
                                   "data-dismiss": "modal"
                                 },
-                                on: { click: _vm.addPhonebook }
+                                on: {
+                                  click: function($event) {
+                                    return _vm.updatePhonebook()
+                                  }
+                                }
                               },
-                              [_vm._v("Save")]
+                              [_vm._v("Update")]
                             )
                           ])
                         ])
@@ -38696,7 +38715,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Friend")]),
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("Add New Entry")]),
       _vm._v(" "),
       _c(
         "button",
@@ -38716,22 +38735,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Friend")]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   },
   function() {
     var _vm = this
@@ -38752,22 +38767,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Friend")]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true

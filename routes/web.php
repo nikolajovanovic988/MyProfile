@@ -33,7 +33,8 @@ Route::post('/profile/{user}/todo/edit/{todo}/{value}', 'ProfileTodoController@e
 Route::get('/profile/{user}/phonebook', 'ProfilePhonebookController@index')->name('phonebook.show');
 Route::post('/profile/{user}/phonebook/store', 'ProfilePhonebookController@store')->name('phonebook.store');
 Route::get('/profile/{user}/phonebook/get', 'ProfilePhonebookController@get');
-Route::delete('/profile/{user}/phonebook/delete/{phonebook}', 'ProfilePhonebookController@delete');
+Route::delete('/profile/{user}/phonebook/{phonebook}', 'ProfilePhonebookController@delete');
+Route::patch('/profile/{user}/phonebook', 'ProfilePhonebookController@update');
 
 // PROFILE
 Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');

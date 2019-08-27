@@ -43,14 +43,14 @@
         props: ['userId'],
 
         mounted() {
-            console.log('Component mounted.')
+            this.getTodo()
         },
 
         name:'todo-list',
         data(){
             return{
                 newTodo: '',
-                todos: this.getTodo()
+                todos: {}
             }
         },
 
@@ -70,11 +70,9 @@
                 if (this.newTodo.trim().length == 0) {
                     return
                 }
-                axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo)
-                    .then(response => {
-                        this.todos = this.getTodo();
-                    }
-                )
+                axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo);
+
+                this.getTodo();
 
                 this.newTodo=''
 
@@ -83,11 +81,9 @@
             deleteTodo(todo, index){
                 this.todos.splice(index, 1)
 
-                axios.delete('/profile/' + this.userId + '/todo/delete/' + todo.id)
-                    .then(response => {
-                        this.todos = this.getTodo();
-                    }
-                )
+                axios.delete('/profile/' + this.userId + '/todo/delete/' + todo.id);
+
+                this.getTodo();
             },
 
             getTodo() {
