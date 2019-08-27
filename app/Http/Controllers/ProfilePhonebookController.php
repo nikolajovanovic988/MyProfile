@@ -46,7 +46,7 @@ class ProfilePhonebookController extends Controller
         return $user->profilephonebook()->orderBy('name', 'DESC')->get();
     }
 
-    public function delete(User $user, ProfilePhonebook $phonebook)
+    public function destroy(User $user, ProfilePhonebook $phonebook)
     {
         $user->profilephonebook()->find($phonebook->id)->delete();
     }

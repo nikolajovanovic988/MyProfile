@@ -205,23 +205,17 @@
 
             addPhonebook(){
 
-                axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook);
+                axios.post('/profile/' + this.userId + '/phonebook', this.newPhonebook);
 
                 this.getPhonebook();
 
-
-                /*
-                this.newPhonebook.name = '';
-                this.newPhonebook.number = '';
-                this.newPhonebook.email = '';
-                */
             },
 
             removePhonebook(phonebook,index){
 
                 this.phonebooks.splice(index,1)
 
-                axios.delete('/profile/' + this.userId + '/phonebook/' + phonebook.id);
+                axios.delete('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
 
                 this.getPhonebook();
 
@@ -245,7 +239,7 @@
 
             updatePhonebook(){
 
-                axios.patch('/profile/' + this.userId + '/phonebook/', this.showPhonebook);
+                axios.patch('/profile/' + this.userId + '/phonebook', this.showPhonebook);
 
                 this.getPhonebook();
             }

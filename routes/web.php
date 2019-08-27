@@ -21,21 +21,6 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-// TODO
-Route::get('/profile/{user}/todo', 'ProfileTodoController@index')->name('todo.show');
-Route::post('/profile/{user}/todo/store/{todo}', 'ProfileTodoController@store')->name('todo.store');
-Route::delete('/profile/{user}/todo/delete/{todo}', 'ProfileTodoController@delete');
-Route::post('/profile/{user}/todo/get', 'ProfileTodoController@get');
-Route::post('/profile/{user}/todo/edit/{todo}/{value}', 'ProfileTodoController@edit');
-
-
-// PHONEBOOK
-Route::get('/profile/{user}/phonebook', 'ProfilePhonebookController@index')->name('phonebook.show');
-Route::post('/profile/{user}/phonebook/store', 'ProfilePhonebookController@store')->name('phonebook.store');
-Route::get('/profile/{user}/phonebook/get', 'ProfilePhonebookController@get');
-Route::delete('/profile/{user}/phonebook/{phonebook}', 'ProfilePhonebookController@delete');
-Route::patch('/profile/{user}/phonebook', 'ProfilePhonebookController@update');
-
 // PROFILE
 Route::get('/profile/{user}', 'ProfileController@index')->name('profile.show');
 Route::get('/profile/{user}/edit', 'ProfileController@edit')->name('profile.edit');
@@ -55,9 +40,23 @@ Route::patch('/profile/{user}/education/{education}', 'ProfileEducationControlle
 Route::delete('/profile/{user}/education/delete/{education}', 'ProfileEducationController@destroy')->name('education.destroy');
 
 //PROJECTS
-Route::get('/profile/{user}/projects', 'ProfileProjectsController@index')->name('projects');
+Route::get('/profile/{user}/projects', 'ProfileProjectsController@index')->name('projects.show');
 Route::get('/profile/{user}/projects/create', 'ProfileProjectsController@create')->name('projects.create');
 Route::post('/profile/{user}/projects', 'ProfileProjectsController@store')->name('projects.store');
 Route::get('/profile/{user}/projects/edit/{project}', 'ProfileProjectsController@edit')->name('projects.edit');
 Route::patch('/profile/{user}/projects/{project}', 'ProfileProjectsController@update')->name('projects.update');
 Route::delete('/profile/{user}/projects/delete/{project}', 'ProfileProjectsController@destroy')->name('projects.destroy');
+
+// TODO
+Route::get('/profile/{user}/todo', 'ProfileTodoController@index')->name('todo.show');
+Route::post('/profile/{user}/todo/{todo}', 'ProfileTodoController@store')->name('todo.store');
+Route::delete('/profile/{user}/todo/delete/{todo}', 'ProfileTodoController@destroy')->name('todo.destroy');
+Route::get('/profile/{user}/todo/get', 'ProfileTodoController@get')->name('todo.get');
+Route::patch('/profile/{user}/todo/{todo}/{value}', 'ProfileTodoController@update')->name('todo.update');
+
+// PHONEBOOK
+Route::get('/profile/{user}/phonebook', 'ProfilePhonebookController@index')->name('phonebook.show');
+Route::post('/profile/{user}/phonebook', 'ProfilePhonebookController@store')->name('phonebook.store');
+Route::get('/profile/{user}/phonebook/get', 'ProfilePhonebookController@get')->name('phonebook.get');
+Route::delete('/profile/{user}/phonebook/delete/{phonebook}', 'ProfilePhonebookController@destroy')->name('phonebook.destroy');
+Route::patch('/profile/{user}/phonebook', 'ProfilePhonebookController@update')->name('phonebook.update');

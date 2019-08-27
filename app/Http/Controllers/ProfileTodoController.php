@@ -39,7 +39,7 @@ class ProfileTodoController extends Controller
         $user->profiletodos()->create($data);
     }
 
-    public function delete(User $user, ProfileTodo $todo)
+    public function destroy(User $user, ProfileTodo $todo)
     {
         $user->profiletodos()->find($todo->id)->delete();
     }
@@ -49,7 +49,7 @@ class ProfileTodoController extends Controller
         return $user->profiletodos;
     }
 
-    public function edit(User $user, ProfileTodo $todo, $value)
+    public function update(User $user, ProfileTodo $todo, $value)
     {
         $user->profiletodos()->find($todo->id)->update(['completed' => $value]);
     }

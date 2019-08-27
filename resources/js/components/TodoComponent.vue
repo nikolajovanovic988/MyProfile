@@ -70,7 +70,7 @@
                 if (this.newTodo.trim().length == 0) {
                     return
                 }
-                axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo);
+                axios.post('/profile/' + this.userId + '/todo/'+ this.newTodo);
 
                 this.getTodo();
 
@@ -88,7 +88,7 @@
 
             getTodo() {
 
-                axios.post('/profile/' + this.userId + '/todo/get')
+                axios.get('/profile/' + this.userId + '/todo/get')
                     .then(response => {
 
                         this.todos = response.data;
@@ -109,9 +109,9 @@
 
             checkTodo(todo){
                 if (todo.completed == true ){
-                    axios.post('/profile/' + this.userId + '/todo/edit/' + todo.id +'/0')
+                    axios.patch('/profile/' + this.userId + '/todo/' + todo.id +'/0')
                 } else {
-                    axios.post('/profile/' + this.userId + '/todo/edit/' + todo.id +'/1')
+                    axios.patch('/profile/' + this.userId + '/todo/' + todo.id +'/1')
                 }
             },
 
@@ -121,12 +121,12 @@
                 if (this.anyRemaining){
                     for (let index = 0; index < this.todos.length; index++) {
                         this.todos[index].completed = true;
-                        axios.post('/profile/' + this.userId + '/todo/edit/' + this.todos[index].id +'/1')
+                        axios.patch('/profile/' + this.userId + '/todo/' + this.todos[index].id +'/1')
                     }
                 } else {
                     for (let index = 0; index < this.todos.length; index++) {
                         this.todos[index].completed = false;
-                        axios.post('/profile/' + this.userId + '/todo/edit/' + this.todos[index].id +'/0')
+                        axios.patch('/profile/' + this.userId + '/todo/' + this.todos[index].id +'/0')
                     }
                 }
 

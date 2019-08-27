@@ -2052,17 +2052,12 @@ __webpack_require__.r(__webpack_exports__);
   computed: {},
   methods: {
     addPhonebook: function addPhonebook() {
-      axios.post('/profile/' + this.userId + '/phonebook/store/', this.newPhonebook);
+      axios.post('/profile/' + this.userId + '/phonebook', this.newPhonebook);
       this.getPhonebook();
-      /*
-      this.newPhonebook.name = '';
-      this.newPhonebook.number = '';
-      this.newPhonebook.email = '';
-      */
     },
     removePhonebook: function removePhonebook(phonebook, index) {
       this.phonebooks.splice(index, 1);
-      axios["delete"]('/profile/' + this.userId + '/phonebook/' + phonebook.id);
+      axios["delete"]('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
       this.getPhonebook();
     },
     getPhonebook: function getPhonebook() {
@@ -2076,7 +2071,7 @@ __webpack_require__.r(__webpack_exports__);
       this.showPhonebook = this.phonebooks[index];
     },
     updatePhonebook: function updatePhonebook() {
-      axios.patch('/profile/' + this.userId + '/phonebook/', this.showPhonebook);
+      axios.patch('/profile/' + this.userId + '/phonebook', this.showPhonebook);
       this.getPhonebook();
     }
   }
@@ -2160,7 +2155,7 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      axios.post('/profile/' + this.userId + '/todo/store/' + this.newTodo);
+      axios.post('/profile/' + this.userId + '/todo/' + this.newTodo);
       this.getTodo();
       this.newTodo = '';
     },
@@ -2172,7 +2167,7 @@ __webpack_require__.r(__webpack_exports__);
     getTodo: function getTodo() {
       var _this = this;
 
-      axios.post('/profile/' + this.userId + '/todo/get').then(function (response) {
+      axios.get('/profile/' + this.userId + '/todo/get').then(function (response) {
         _this.todos = response.data;
 
         for (var index = 0; index < _this.todos.length; index++) {
@@ -2186,21 +2181,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     checkTodo: function checkTodo(todo) {
       if (todo.completed == true) {
-        axios.post('/profile/' + this.userId + '/todo/edit/' + todo.id + '/0');
+        axios.patch('/profile/' + this.userId + '/todo/' + todo.id + '/0');
       } else {
-        axios.post('/profile/' + this.userId + '/todo/edit/' + todo.id + '/1');
+        axios.patch('/profile/' + this.userId + '/todo/' + todo.id + '/1');
       }
     },
     checkAll: function checkAll() {
       if (this.anyRemaining) {
         for (var index = 0; index < this.todos.length; index++) {
           this.todos[index].completed = true;
-          axios.post('/profile/' + this.userId + '/todo/edit/' + this.todos[index].id + '/1');
+          axios.patch('/profile/' + this.userId + '/todo/' + this.todos[index].id + '/1');
         }
       } else {
         for (var _index = 0; _index < this.todos.length; _index++) {
           this.todos[_index].completed = false;
-          axios.post('/profile/' + this.userId + '/todo/edit/' + this.todos[_index].id + '/0');
+          axios.patch('/profile/' + this.userId + '/todo/' + this.todos[_index].id + '/0');
         }
       }
     }
