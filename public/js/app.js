@@ -2037,7 +2037,6 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.getPhonebook();
   },
-  name: 'phonebook-list',
   data: function data() {
     return {
       showPhonebook: {},
@@ -2046,25 +2045,47 @@ __webpack_require__.r(__webpack_exports__);
         number: '',
         email: ''
       },
-      phonebooks: {}
+      phonebooks: {},
+      searchQuery: '',
+      temp: ''
     };
+  },
+  watch: {
+    searchQuery: function searchQuery() {
+      var _this = this;
+
+      if (this.searchQuery.length > 0) {
+        this.temp = this.phonebooks.filter(function (item) {
+          return Object.keys(item).some(function (key) {
+            var text = String(item[key]);
+            return text.toLowerCase().indexOf(_this.searchQuery.toLowerCase()) > -1;
+          });
+        }); //console.log(result);
+      } else {
+        this.temp = this.phonebooks;
+      }
+    }
   },
   computed: {},
   methods: {
     addPhonebook: function addPhonebook() {
       axios.post('/profile/' + this.userId + '/phonebook', this.newPhonebook);
       this.getPhonebook();
+      this.newPhonebook = "";
     },
     removePhonebook: function removePhonebook(phonebook, index) {
-      this.phonebooks.splice(index, 1);
-      axios["delete"]('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
-      this.getPhonebook();
+      if (confirm("Are you shure")) {
+        this.phonebooks.splice(index, 1);
+        axios["delete"]('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
+        this.getPhonebook();
+      }
     },
     getPhonebook: function getPhonebook() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/profile/' + this.userId + '/phonebook/get').then(function (response) {
-        _this.phonebooks = response.data;
+        _this2.phonebooks = response.data;
+        _this2.temp = response.data;
       });
     },
     setPhonebookData: function setPhonebookData(index) {
@@ -2132,7 +2153,6 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.getTodo();
   },
-  name: 'todo-list',
   data: function data() {
     return {
       newTodo: '',
@@ -38188,8 +38208,25 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.searchQuery,
+                  expression: "searchQuery"
+                }
+              ],
               staticClass: "w-100",
-              attrs: { type: "text", name: "todo", placeholder: "Search" }
+              attrs: { type: "text", name: "todo", placeholder: "Search" },
+              domProps: { value: _vm.searchQuery },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.searchQuery = $event.target.value
+                }
+              }
             }),
             _vm._v(" "),
             _c(
@@ -38373,7 +38410,7 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _vm._l(_vm.phonebooks, function(phonebook, index) {
+        _vm._l(_vm.temp, function(phonebook, index) {
           return _c("div", { key: phonebook.id, staticClass: "d-flex" }, [
             _c("div", { staticClass: "d-flex w-50" }, [
               _c("div", { staticClass: "pl-1" }, [

@@ -5,7 +5,7 @@
 
             <div class="d-flex justify-content-between align-items-center pb-3">
                 <img src="/img/mglass/magnifying-glass.jpg" class="logo pr-2" alt="">
-                <input type="text" name="todo" class="w-100" placeholder="Search">
+                <input type="text" name="todo" class="w-100" placeholder="Search" v-model="searchQuery">
 
                 <!-- Add -->
                 <button type="button" class="btn-success ml-3" data-toggle="modal" data-target="#set">
@@ -61,7 +61,7 @@
             </div>
 
 
-           <div v-for="(phonebook, index) in phonebooks" :key="phonebook.id" class="d-flex">
+           <div v-for="(phonebook, index) in temp" :key="phonebook.id" class="d-flex">
 
                 <div class="d-flex w-50">
                     <div class="pl-1" >{{phonebook.name}}</div>
@@ -180,7 +180,6 @@
             this.getPhonebook()
         },
 
-        name:'phonebook-list',
         data(){
             return{
 
@@ -194,6 +193,30 @@
 
                 phonebooks: {},
 
+                searchQuery: '',
+
+                temp: ''
+
+            }
+        },
+
+        watch: {
+            searchQuery(){
+
+                if(this.searchQuery.length > 0){
+
+                    this.temp = this.phonebooks.filter((item) => {
+                        return Object.keys(item).some((key)=>{
+
+                            let text = String(item[key]);
+                            return text.toLowerCase().indexOf(this.searchQuery.toLowerCase())>-1
+                        })
+                    });
+
+                    //console.log(result);
+                } else {
+                    this.temp = this.phonebooks;
+                }
             }
         },
 
@@ -209,15 +232,21 @@
 
                 this.getPhonebook();
 
+                this.newPhonebook = "";
+
             },
 
             removePhonebook(phonebook,index){
 
-                this.phonebooks.splice(index,1)
+                if (confirm("Are you shure")){
 
-                axios.delete('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
+                    this.phonebooks.splice(index,1)
 
-                this.getPhonebook();
+                    axios.delete('/profile/' + this.userId + '/phonebook/delete/' + phonebook.id);
+
+                    this.getPhonebook();
+
+                }
 
             },
 
@@ -227,6 +256,7 @@
                     .then(response => {
 
                         this.phonebooks = response.data;
+                        this.temp = response.data;
                     }
                 )
             },

@@ -46,7 +46,6 @@
             this.getTodo()
         },
 
-        name:'todo-list',
         data(){
             return{
                 newTodo: '',

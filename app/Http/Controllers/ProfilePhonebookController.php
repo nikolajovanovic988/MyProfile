@@ -43,7 +43,7 @@ class ProfilePhonebookController extends Controller
 
     public function get(User $user)
     {
-        return $user->profilephonebook()->orderBy('name', 'DESC')->get();
+        return $user->profilephonebook()->orderBy('name', 'ASC')->get();
     }
 
     public function destroy(User $user, ProfilePhonebook $phonebook)
