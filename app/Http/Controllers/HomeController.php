@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home.profiles-home');
+        $users = User::all();
+
+        return view('home.profiles-home', compact('users'));
     }
 }
