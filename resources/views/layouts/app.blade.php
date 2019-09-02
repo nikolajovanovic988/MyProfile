@@ -106,16 +106,6 @@
                     </li>
                 </ul>
             </div>
-
-        @elseif (!\Request::is('login') && !\Request::is('register'))
-            <div class="py-4">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" id="navId">
-                        <li class="nav-item">
-                            <a href="{{ url('/') }}" class="nav-link active">Profile</a>
-                        </li>
-                    </ul>
-                </div>
         @endif
 
         <main class="py-4">

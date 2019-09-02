@@ -11,6 +11,11 @@ class HomeController extends Controller
     {
         $users = User::all();
 
-        return view('home.profiles-home', compact('users'));
+        return view('home.index', compact('users'));
+    }
+
+    public function show(User $user)
+    {
+        return view('home.profile-page', compact('user'));
     }
 }

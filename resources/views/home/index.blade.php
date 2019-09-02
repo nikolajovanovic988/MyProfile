@@ -26,16 +26,16 @@
 
                 @foreach ($users as $user)
 
-                    <a href="#" class="col-6 pt-5 d-flex">
+                    <a href="/{{$user->id}}" class="col-6 pt-5 d-flex">
 
                         <div class="w-50 p-5">
                             <img src="{{$user->profile->profileImage()}}" class="rounded-circle w-100" alt="">
                         </div>
-                        <div class="w-50 pt-5">
+                        <div class="w-50 pt-5 text-color">
                             <div class="pt-3"> {{$user->name}}</div>
                             <div> {{$user->email}} </div>
-                            <div> {{$user->profile->description}}</div>
-                            <div class="pt-3"> This will be short description</div>
+                            <div> {{$user->profilecontact->phone}} </div>
+                            <div class="pt-3"> {{$user->profile->description}}</div>
                         </div>
 
                      </a>
