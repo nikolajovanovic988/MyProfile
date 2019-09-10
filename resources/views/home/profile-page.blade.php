@@ -27,7 +27,7 @@
 
             </div>
 
-            <div class="col-4 shadow-sm bg-white ml-1">
+            <div class="col-4 shadow-sm bg-white">
                 <h4>Education:</h4>
                 @foreach ($user->profileeducations as $education)
                     <div class="pl-2 pt-2">
@@ -43,7 +43,7 @@
 
         <div class="col-12">
 
-            <div class="col-12 shadow-sm">
+            <div class="col-12 shadow-sm bg-white mt-1">
                 <div class="row">
                     @foreach ($user->profileprojects as $projects)
                     <div class="col-lg-12 pt-5 d-flex">

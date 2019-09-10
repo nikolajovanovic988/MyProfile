@@ -87,7 +87,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" id="navId">
                     <li class="nav-item">
-                        <a href="/profile/{{$user->id}}" class="nav-link active">Profile</a>
+                        <a href="/profile/{{$user->id}}" class="nav-link">Profile</a>
                     </li>
                     <li class="nav-item ">
                         <a href="/profile/{{$user->id}}/projects" class="nav-link">Projects</a>
